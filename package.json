@@ -1,0 +1,22 @@
+{
+  "name": "destiny-bot",
+  "version": "0.1.0",
+  "description": "Destiny — a multipurpose Discord bot that hands out accounts from a private stock.",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "deploy": "node src/deploy-commands.js",
+    "check": "node scripts/check.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "discord.js": "^14.28.1",
+    "dotenv": "^16.6.1"
+  }
+}
