@@ -45,22 +45,52 @@ nightowl | 9f8e7d6c
 stardust KEY-12345
 ```
 
-## Setup
+## Setup (works entirely from a phone)
 
-1. Create an application at <https://discord.com/developers/applications>. Under **Bot**, reset the token and copy it.
-2. Invite the bot. In **OAuth2 → URL Generator**, tick the `bot` and `applications.commands` scopes. Then tick these permissions: Send Messages, Embed Links, Attach Files, Kick Members, Ban Members, Moderate Members, Manage Messages.
-3. Install and configure:
-   ```bash
-   npm install
-   cp .env.example .env   # fill in DISCORD_TOKEN and CLIENT_ID (GUILD_ID for instant dev registration)
-   npm run deploy         # register slash commands
-   npm start
-   ```
-4. In your server, run `/stock upload` with your file, then `/generate`.
+Tip: switch your phone browser to **Desktop site** for these pages.
 
-You need Node.js 18.17 or newer. Data is stored in SQLite at `data/destiny.db`, which git ignores. Back it up, because it holds your keys.
+**1. Create the bot**
+1. Go to <https://discord.com/developers/applications> → **New Application** → name it `Destiny`.
+2. Go to **Bot** → **Reset Token**, then copy the token and keep it secret.
+3. On the same page, tap the icon to upload `assets/avatar.png` as the profile picture. You can skip this, because Destiny sets the picture itself on first start.
 
-`npm run check` runs an offline self-test of the commands and the database.
+**2. Invite it to your server.** Open this link, replacing `APP_ID` with the **Application ID** from **General Information**:
+```
+https://discord.com/oauth2/authorize?client_id=APP_ID&scope=bot%20applications.commands&permissions=1101659237382
+```
+
+**3. Host it on [Railway](https://railway.app)**
+1. Sign in with GitHub → **New Project** → **Deploy from GitHub repo** → pick `destiny-bot`.
+2. If the code isn't on your main branch yet: **Settings** → **Source** → set the branch to the one with the bot.
+3. **Variables** → add `DISCORD_TOKEN` = your token.
+4. **Add a Volume** to the service, mounted at `/data`. Then add the variable `DATABASE_PATH` = `/data/destiny.db`.
+   **Don't skip this.** Without a volume, every redeploy wipes your stock.
+5. Railway installs and runs the bot automatically (`npm start`).
+
+**4. Check it's working.** Open **Deployments** → **View logs**. You should see:
+```
+✦ Destiny is online as Destiny#1234 in 1 server(s).
+✦ Registered 18 commands in "Your Server".
+```
+The slash commands appear in your server straight away; you don't need a deploy step. If they don't show, fully close and reopen Discord.
+
+**5. Use it:** `/stock paste` to add accounts, then `/generate`.
+
+### Troubleshooting
+| Log says | Fix |
+|---|---|
+| `Discord rejected the token` | Reset the token and paste it into `DISCORD_TOKEN` again (no spaces) |
+| `isn't in any servers yet` | Use the invite link printed in the log |
+| `Could not register commands` | Re-invite with the link above (it includes `applications.commands`) |
+| Bot online but commands missing | Restart Discord. Make sure you're in the server you invited it to |
+
+### Running on a computer instead
+```bash
+npm install
+cp .env.example .env   # set DISCORD_TOKEN
+npm start
+```
+You need Node.js 18.17 or newer. `npm run check` runs an offline self-test.
 
 ## Project layout
 

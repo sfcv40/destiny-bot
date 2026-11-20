@@ -13,9 +13,31 @@ if (!process.env.DISCORD_TOKEN) {
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = loadCommands();
 
-client.once(Events.ClientReady, (c) => {
+// Register slash commands straight to each server so they appear instantly —
+// no separate deploy step needed, which means the bot can be set up entirely from a host's web panel.
+const commandBody = [...client.commands.values()].map((c) => c.data.toJSON());
+
+async function registerCommands(guild) {
+  try {
+    await guild.commands.set(commandBody);
+    console.log(`✦ Registered ${commandBody.length} commands in "${guild.name}".`);
+  } catch (err) {
+    console.warn(`Could not register commands in "${guild.name}": ${err.message}. ` +
+      'Re-invite the bot with the applications.commands scope.');
+  }
+}
+
+client.on(Events.GuildCreate, registerCommands);
+
+client.once(Events.ClientReady, async (c) => {
   console.log(`✦ Destiny is online as ${c.user.tag} in ${c.guilds.cache.size} server(s).`);
   c.user.setActivity('/generate ✦', { type: ActivityType.Watching });
+
+  if (c.guilds.cache.size === 0) {
+    const invite = `https://discord.com/oauth2/authorize?client_id=${c.user.id}&scope=bot%20applications.commands&permissions=1101659237382`;
+    console.log(`✦ Destiny isn't in any servers yet. Invite it with:\n  ${invite}`);
+  }
+  for (const guild of c.guilds.cache.values()) await registerCommands(guild);
 
   // Give Destiny its profile picture the first time it starts without one.
   // (Discord rate-limits avatar changes, so this only runs when no avatar is set.)
@@ -61,4 +83,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 process.on('unhandledRejection', (err) => console.error('Unhandled rejection:', err));
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(process.env.DISCORD_TOKEN.trim()).catch((err) => {
+  if (err.code === 'TokenInvalid') {
+    console.error('✧ Discord rejected the token. Reset it in the Developer Portal (Bot → Reset Token) and update DISCORD_TOKEN.');
+  } else if (/disallowed intents/i.test(err.message)) {
+    console.error('✧ Discord refused the requested intents. Check the Bot page in the Developer Portal.');
+  } else {
+    console.error('✧ Could not log in to Discord:', err.message);
+  }
+  process.exit(1);
+});
