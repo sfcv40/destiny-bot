@@ -30,7 +30,7 @@ A multipurpose Discord bot. Its signature feature: **`/generate` hands a member 
 
 **Config** (needs Manage Server): `/config view | cooldown | role | logchannel | delivery | reuse | resetcooldown`
 
-**General:** `/help`, `/ping`, `/botinfo`, `/serverinfo`, `/userinfo`, `/avatar`
+**General:** `/say` (send a message as Destiny), `/help`, `/ping`, `/botinfo`, `/serverinfo`, `/userinfo`, `/avatar`
 **Fun:** `/8ball`, `/coinflip`, `/roll`, `/choose`
 **Moderation:** `/kick`, `/ban`, `/timeout`, `/purge`
 
