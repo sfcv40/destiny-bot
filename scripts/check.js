@@ -33,6 +33,19 @@ assert.ok(db.claimRandom(g, null, 'user1', true), 'reuse mode works');
 assert.strictEqual(db.countAccounts(g, null), 3, 'reuse mode leaves stock untouched');
 assert.strictEqual(db.recentClaims(g).length, 4);
 
+const tickets = require('../src/ticketsDb');
+assert.strictEqual(tickets.nextTicketNumber(g), 1);
+assert.strictEqual(tickets.nextTicketNumber(g), 2);
+tickets.updateTicketSettings(g, { support_role_id: 'role1' });
+assert.strictEqual(tickets.getTicketSettings(g).support_role_id, 'role1');
+tickets.createTicket({ guildId: g, channelId: 'chan1', userId: 'u1', number: 2, reason: 'help' });
+assert.ok(tickets.getOpenTicketForUser(g, 'u1'));
+assert.strictEqual(tickets.claimTicket('chan1', 'staff'), 1);
+assert.strictEqual(tickets.closeTicket('chan1', 'staff', 'done'), 1);
+assert.strictEqual(tickets.closeTicket('chan1', 'staff', 'again'), 0, 'cannot close twice');
+assert.strictEqual(tickets.getOpenTicketForUser(g, 'u1'), undefined);
+console.log('tickets ok');
+
 db.db.close();
 for (const s of ['', '-wal', '-shm']) fs.rmSync(process.env.DATABASE_PATH + s, { force: true });
 console.log('database ok');

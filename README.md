@@ -30,6 +30,14 @@ A multipurpose Discord bot. Its signature feature: **`/generate` hands a member 
 
 **Config** (needs Manage Server): `/config view | cooldown | role | logchannel | delivery | reuse | resetcooldown`
 
+**Support tickets**
+1. `/ticket setup support_role:@Staff category:Tickets log_channel:#ticket-logs`. Every option is optional.
+2. `/ticket panel` posts an **Open a ticket** button. Members press it, say what they need, and get a private channel. Only the member and the support role can see it.
+3. Inside a ticket, use the **Claim** and **Close** buttons. Staff also have `/ticket add`, `/ticket remove`, `/ticket rename` and `/ticket claim`, and `/ticket close [reason]` works too.
+4. When a ticket closes, a `.txt` transcript is sent to the log channel and DM'd to the member, and the channel is deleted.
+
+Each member can have one open ticket at a time. The bot needs **Manage Channels** and **Manage Roles**, which the invite link below includes. To get message text in transcripts, turn on **Message Content Intent** in the Developer Portal → Bot.
+
 **General:** `/say` (send a message as Destiny), `/help`, `/ping`, `/botinfo`, `/serverinfo`, `/userinfo`, `/avatar`
 **Fun:** `/8ball`, `/coinflip`, `/roll`, `/choose`
 **Moderation:** `/kick`, `/ban`, `/timeout`, `/purge`
@@ -56,7 +64,7 @@ Tip: switch your phone browser to **Desktop site** for these pages.
 
 **2. Invite it to your server.** Open this link, replacing `APP_ID` with the **Application ID** from **General Information**:
 ```
-https://discord.com/oauth2/authorize?client_id=APP_ID&scope=bot%20applications.commands&permissions=1101659237382
+https://discord.com/oauth2/authorize?client_id=APP_ID&scope=bot%20applications.commands&permissions=1101927672854
 ```
 
 **3. Host it on [Railway](https://railway.app)**

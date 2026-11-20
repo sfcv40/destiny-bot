@@ -4,6 +4,7 @@ const { Client, GatewayIntentBits, Events, ActivityType, MessageFlags } = requir
 const loadCommands = require('./loadCommands');
 const embeds = require('./util/embeds');
 const { isAdmin } = require('./util/permissions');
+const tickets = require('./ticketsDb');
 
 if (!process.env.DISCORD_TOKEN) {
   console.error('Missing DISCORD_TOKEN. Copy .env.example to .env and fill it in.');
@@ -29,12 +30,17 @@ async function registerCommands(guild) {
 
 client.on(Events.GuildCreate, registerCommands);
 
+// If someone deletes a ticket channel by hand, mark the ticket closed so the member can open a new one.
+client.on(Events.ChannelDelete, (channel) => {
+  tickets.closeTicket(channel.id, client.user.id, 'Channel was deleted');
+});
+
 client.once(Events.ClientReady, async (c) => {
   console.log(`✦ Destiny is online as ${c.user.tag} in ${c.guilds.cache.size} server(s).`);
   c.user.setActivity('/generate ✦', { type: ActivityType.Watching });
 
   if (c.guilds.cache.size === 0) {
-    const invite = `https://discord.com/oauth2/authorize?client_id=${c.user.id}&scope=bot%20applications.commands&permissions=1101659237382`;
+    const invite = `https://discord.com/oauth2/authorize?client_id=${c.user.id}&scope=bot%20applications.commands&permissions=1101927672854`;
     console.log(`✦ Destiny isn't in any servers yet. Invite it with:\n  ${invite}`);
   }
   for (const guild of c.guilds.cache.values()) await registerCommands(guild);
@@ -54,6 +60,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
       const cmd = client.commands.get(interaction.commandName);
       if (cmd?.adminOnly && !isAdmin(interaction)) return interaction.respond([]);
       return await cmd?.autocomplete?.(interaction);
+    }
+
+    if (interaction.isButton()) {
+      const cmd = client.commands.get(interaction.customId.split('-')[0]);
+      if (cmd?.adminOnly && !isAdmin(interaction)) return;
+      return await cmd?.button?.(interaction);
     }
 
     if (interaction.isModalSubmit()) {

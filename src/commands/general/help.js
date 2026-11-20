@@ -5,6 +5,7 @@ const embeds = require('../../util/embeds');
 const SECTIONS = {
   accounts: { label: '✦ Accounts', admin: false },
   admin: { label: '✦ Admin', admin: true },
+  support: { label: '✦ Support', admin: false },
   general: { label: '✦ General', admin: false },
   fun: { label: '✦ Fun', admin: false },
   moderation: { label: '✦ Moderation', admin: false },
