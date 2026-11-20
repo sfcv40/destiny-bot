@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('node:path');
 const { Client, GatewayIntentBits, Events, ActivityType, MessageFlags } = require('discord.js');
 const loadCommands = require('./loadCommands');
 const embeds = require('./util/embeds');
@@ -15,6 +16,14 @@ client.commands = loadCommands();
 client.once(Events.ClientReady, (c) => {
   console.log(`✦ Destiny is online as ${c.user.tag} in ${c.guilds.cache.size} server(s).`);
   c.user.setActivity('/generate ✦', { type: ActivityType.Watching });
+
+  // Give Destiny its profile picture the first time it starts without one.
+  // (Discord rate-limits avatar changes, so this only runs when no avatar is set.)
+  if (!c.user.avatar) {
+    c.user.setAvatar(path.join(__dirname, '..', 'assets', 'avatar.png'))
+      .then(() => console.log('✦ Profile picture set.'))
+      .catch((err) => console.warn('Could not set profile picture:', err.message));
+  }
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {

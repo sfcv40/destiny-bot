@@ -1,5 +1,7 @@
 # ✦ Destiny
 
+<img src="assets/avatar.png" width="120" align="right" alt="Destiny avatar">
+
 ![Destiny](assets/banner.png)
 
 A multipurpose Discord bot. Its signature feature: **`/generate` hands a member a random username and key from a private stock that you fill.**
