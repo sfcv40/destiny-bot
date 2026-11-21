@@ -4,6 +4,8 @@
 
 ![Destiny](assets/banner.png)
 
+> This repo also contains **[Mirage](mirage/)**, a separate all-powerful server management bot, in the `mirage/` folder.
+
 A multipurpose Discord bot. Its signature feature: **`/generate` hands a member a random username and key from a private stock that you fill.**
 
 ## Features

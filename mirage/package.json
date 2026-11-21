@@ -1,0 +1,20 @@
+{
+  "name": "mirage-bot",
+  "version": "0.1.0",
+  "description": "Mirage — an all-powerful server management bot that answers only to its owner.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "check": "node scripts/check.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "discord.js": "^14.28.1",
+    "dotenv": "^16.6.1"
+  }
+}
